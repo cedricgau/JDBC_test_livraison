@@ -24,6 +24,8 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import JDBC.Client;
+import JDBC.ClientDao;
 
 import javax.swing.JOptionPane;
 
@@ -94,10 +96,9 @@ public class ClientInsertJDBC {
 			pstmt.setInt(1, intNoClient);
 			boolean nbLignesImpactees2 = pstmt.execute();
 			System.out.println(nbLignesImpactees2);
-			System.exit(0);
+			//System.exit(0);
 			
 			
-
 			System.out.println("\nOn rembobine car c'est un test");
 			cnx.rollback();
 
@@ -109,6 +110,19 @@ public class ClientInsertJDBC {
 	} catch (SQLException e1) {
 		System.out.println("Pb pour atteindre la BD  -  " + e1.getMessage());
 		System.exit(2);
-	}}}
+	}
+	
+			System.out.println("\n----------------QUESTION 5 : PERSISTENCE D'UN OBJET CLIENT : CLIENTDAO-----------------\n");
+	
+	
+			Client ced = new Client(120, "Cédric Gautier", "06 99 99 99");
+			new ClientDao(ced);
+	
+	
+			System.out.println("\n----------------QUESTION 6 : FINDCLIENTBYKEY DANS CLIENTDAO-----------------\n");
+	
+			new ClientDao(70);
+	
+	}}
 
 
