@@ -5,10 +5,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientDao {
 	private String requete;
-	
+	public List<Client> clients = new ArrayList<>();
 
 	public ClientDao(Client c) {
 		try {
@@ -63,6 +65,50 @@ public class ClientDao {
 	}
 	
 	
+	public ClientDao(String nom) {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+		}catch (ClassNotFoundException e) {
+			System.out.println("Driver non présent dans le CLASSPATH  -  " + e.getMessage());
+			System.exit(1);
+		}
+		
+		findClientByNom(nom);
+	}
+
+	private List<Client> findClientByNom(String nom) {
+		try( Connection cnx = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xepdb1", "livraison", "livraison")) {
+			
+			try(Statement stmt = cnx.createStatement()) {
+				//On souhaite ne pas valider une transaction
+				cnx.setAutoCommit(false);
+				
+								
+				ResultSet rs = stmt.executeQuery("SELECT NOCLIENT, NOMCLIENT, NOTELEPHONE FROM CLIENT WHERE NOMCLIENT LIKE '%"+nom+"%'");
+				
+				System.out.println("Clients portant le même nom : \n");
+				while(rs.next()) {
+					System.out.println(rs.getInt("NOCLIENT")+" "+rs.getString("NOMCLIENT")+" "+rs.getString("NOTELEPHONE"));
+					clients.add(new Client(rs.getInt("NOCLIENT"),rs.getString("NOMCLIENT"),rs.getString("NOTELEPHONE")));
+				
+				}
+	
+				return clients;
+				
+			} catch (SQLException e) {
+				System.out.println("Pb JDBC  -  " + e.getMessage());
+			}
+			
+			return null;
+		} catch (SQLException e1) {
+			System.out.println("Pb pour atteindre la BD  -  " + e1.getMessage());
+			System.exit(2);
+		}
+		return null;
+		
+	}
+
 	private Client findClientByKey(int id) {
 		
 
@@ -73,15 +119,16 @@ public class ClientDao {
 				cnx.setAutoCommit(false);
 				
 				ResultSet rs = stmt.executeQuery("SELECT NOCLIENT, NOMCLIENT, NOTELEPHONE FROM CLIENT WHERE NOCLIENT = "+id);
-				
-				while(rs.next()){
-					System.out.println("NOCLIENT :"+ rs.getInt("NOCLIENT")+" DNAME :" + rs.getString("NOMCLIENT")+" NOTELEPHONE :" + rs.getString("NOTELEPHONE"));
-				}
-				
+				rs.next();
+				int a = rs.getInt("NOCLIENT");
+				String b = rs.getString("NOMCLIENT");
+				String c = rs.getString("NOTELEPHONE");
+	
+				System.out.println("NOCLIENT :"+ a+" DNAME :" + b+" NOTELEPHONE :" + c);
 						
-				cnx.rollback();
+				Client ask = new Client(a,b,c);
 				
-				return new Client(rs.getInt("NOCLIENT"),rs.getString("NOMCLIENT"),rs.getString("NOTELEPHONE"));
+				return ask;
 				
 			} catch (SQLException e) {
 				System.out.println("Pb JDBC  -  " + e.getMessage());
@@ -109,6 +156,14 @@ public String getRequete() {
 
 public void setRequete(String requete) {
 	this.requete = requete;
+}
+
+public List<Client> getClients() {
+	return clients;
+}
+
+public void setClients(List<Client> clients) {
+	this.clients = clients;
 }
 	
 	

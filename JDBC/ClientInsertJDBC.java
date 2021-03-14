@@ -23,6 +23,7 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import JDBC.Client;
 import JDBC.ClientDao;
@@ -79,23 +80,23 @@ public class ClientInsertJDBC {
 			
 			System.out.println("\n----------------QUESTION 3 : ASSEMBLAGE D'UNE REQUETE SQL DYNAMIQUE-----------------\n");
 			
-			String num = JOptionPane.showInputDialog(null, "Quel est le numéro du client désiré supérieur à 40 ? ", "Numéro du client", JOptionPane.INFORMATION_MESSAGE);
-			
-			rs = stmt.executeQuery("SELECT NOCLIENT, NOMCLIENT FROM CLIENT WHERE NOCLIENT = "+num+" AND NOCLIENT > 40");
-			
-			while(rs.next()){
-				System.out.println("NOCLIENT :"+ rs.getInt("NOCLIENT")+" DNAME :" + rs.getString("NOMCLIENT"));
-			}
-			
-			System.out.println("\n----------------QUESTION 4 : UTILISATION D'UN PREPARESTATEMENT-----------------\n");
-			
-			String num2 = JOptionPane.showInputDialog(null, "Quel est le numéro du client désiré ? ", "Numéro du client", JOptionPane.INFORMATION_MESSAGE);
-			
-			PreparedStatement pstmt = cnx.prepareStatement("SELECT NOCLIENT, NOMCLIENT FROM CLIENT WHERE NOCLIENT > ?");
-			int intNoClient = Integer.parseInt(num2);
-			pstmt.setInt(1, intNoClient);
-			boolean nbLignesImpactees2 = pstmt.execute();
-			System.out.println(nbLignesImpactees2);
+//			String num = JOptionPane.showInputDialog(null, "Quel est le numéro du client désiré supérieur à 40 ? ", "Numéro du client", JOptionPane.INFORMATION_MESSAGE);
+//			
+//			rs = stmt.executeQuery("SELECT NOCLIENT, NOMCLIENT FROM CLIENT WHERE NOCLIENT = "+num+" AND NOCLIENT > 40");
+//			
+//			while(rs.next()){
+//				System.out.println("NOCLIENT :"+ rs.getInt("NOCLIENT")+" DNAME :" + rs.getString("NOMCLIENT"));
+//			}
+//			
+//			System.out.println("\n----------------QUESTION 4 : UTILISATION D'UN PREPARESTATEMENT-----------------\n");
+//			
+//			String num2 = JOptionPane.showInputDialog(null, "Quel est le numéro du client désiré ? ", "Numéro du client", JOptionPane.INFORMATION_MESSAGE);
+//			
+//			PreparedStatement pstmt = cnx.prepareStatement("SELECT NOCLIENT, NOMCLIENT FROM CLIENT WHERE NOCLIENT > ?");
+//			int intNoClient = Integer.parseInt(num2);
+//			pstmt.setInt(1, intNoClient);
+//			boolean nbLignesImpactees2 = pstmt.execute();
+//			System.out.println(nbLignesImpactees2);
 			//System.exit(0);
 			
 			
@@ -122,6 +123,15 @@ public class ClientInsertJDBC {
 			System.out.println("\n----------------QUESTION 6 : FINDCLIENTBYKEY DANS CLIENTDAO-----------------\n");
 	
 			new ClientDao(70);
+			
+			System.out.println("\n----------------QUESTION 7 : MONTANT TOTAL DE LA LIVRAISON-----------------\n");
+			
+			new TestSum(100);
+			
+			System.out.println("\n----------------QUESTION 8 : FINDCLIENTBYNOM DANS CLIENTDAO-----------------\n");
+			
+			new ClientDao("Tremblay");
+			
 	
 	}}
 
