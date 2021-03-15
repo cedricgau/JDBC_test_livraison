@@ -10,16 +10,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 public class PingJdbc {
-	 
-	   public static void load(String filename) throws IOException, FileNotFoundException{
+	
+		public static void load(int type , String requete) throws IOException, FileNotFoundException{
 	      Properties properties = new Properties();
-	      FileInputStream input = new FileInputStream(filename);
+	      FileInputStream input = new FileInputStream("JDBC\\jdbc.properties");
 	      try{
 	         properties.load(input);
+	      }finally{
+		         input.close();
+		  }
 	        
 	         try {
-	 			Class.forName(properties.getProperty("driver"));
+	        	Class.forName(properties.getProperty("driver"));
 	 			
 	 		}catch (ClassNotFoundException e) {
 	 			System.out.println("Driver non présent dans le CLASSPATH  -  " + e.getMessage());
@@ -32,14 +37,19 @@ public class PingJdbc {
 	 			
 	 			try(Statement stmt = cnx.createStatement()) {
 	 				//On souhaite ne pas valider une transaction
-	 				cnx.setAutoCommit(false);
+	 				cnx.setAutoCommit(true);
 	 				
-	 				ResultSet rs = stmt.executeQuery("SELECT NOCLIENT, NOMCLIENT, NOTELEPHONE FROM CLIENT ORDER BY NOCLIENT");
+	 				if ( type == 1 ) {
+	 					ResultSet rs = stmt.executeQuery(requete);
 	 				
 	 				while(rs.next()){
-	 					System.out.println("NOCLIENT :"+ rs.getInt("NOCLIENT")+" DNAME :" + rs.getString("NOMCLIENT")+" NOTELEPHONE :" + rs.getString("NOTELEPHONE"));
+	 					JOptionPane.showInternalMessageDialog(null,"CLIENT NOCLIENT :"+ rs.getInt("NOCLIENT")+" DNAME :" + rs.getString("NOMCLIENT")+" NOTELEPHONE :" + rs.getString("NOTELEPHONE"),"SELECT DE TOUS LES CLIENTS",JOptionPane.INFORMATION_MESSAGE);
 	 				}
-	 				
+	 				}else if(type == 2) {
+	 					int nLI=stmt.executeUpdate(requete);
+	 				}else {
+	 					stmt.execute(requete);
+	 				}
 	 				cnx.rollback();
 	 				
 	 			} catch (SQLException e) {
@@ -51,13 +61,12 @@ public class PingJdbc {
 	 			System.out.println("Pb pour atteindre la BD  -  " + e1.getMessage());
 	 			System.exit(2);
 	 		}
-	         
-	      }finally{
-	         input.close();
-	      }}
+	   }         
+	     
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {			  
-		PingJdbc.load("F:\\Projets_Git\\JDBC_test_livraison\\JDBC\\jdbc.properties");
+		PingJdbc.load(1,"SELECT NOCLIENT, NOMCLIENT, NOTELEPHONE FROM CLIENT ORDER BY NOCLIENT");
+		
 	}
 }
 

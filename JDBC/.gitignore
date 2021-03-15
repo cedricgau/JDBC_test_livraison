@@ -1,0 +1,10 @@
+/Client.class
+/ClientDao.class
+/ClientInsertJDBC.class
+/JdbcTest1_Statement_ResultSet.class
+/JdbcTest2_Departement_tryWithResource.class
+/JdbcTest3_SQLDynamique_PreparedStatement.class
+/PingJdbc.class
+/TestSum.class
+/Information_Temporelle.class
+/Persistance_image.class
