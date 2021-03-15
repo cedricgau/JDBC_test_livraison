@@ -18,6 +18,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 public class Information_Temporelle {
 	
 	
@@ -51,10 +53,14 @@ public class Information_Temporelle {
 		 	            pstmt.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
 		 	            pstmt.executeUpdate();
 		 			
-		 				ResultSet rs = stmt.executeQuery("select TO_CHAR(ladate,'DD-MON-YYYY HH24:MI:SS'),TO_CHAR(heure,'DD-MON-YYYY HH24:MI:SS'),TO_CHAR(ladateetheure,'DD-MON-YYYY HH24:MI:SS'),TO_CHAR(ladateetheure2,'DD-MON-YYYY HH24:MI:SS.FF') from letemps");
-//		 				while(rs.next()){
-//		 					System.out.println("La date :"+ rs.getString("LADATE")+" L'heure :" + rs.getTime("HEURE")+" DATE ET TEMPS :" +rs.getDate("ladateetheure"));
-//		 				}
+		 				ResultSet rs = stmt.executeQuery("select * from letemps");
+		 				while(rs.next()){
+		 					System.out.println("La date :"+ rs.getString("LADATE")+" L'heure :" + rs.getTime("HEURE")+" DATE ET TEMPS :" +rs.getTimestamp("ladateetheure"));
+		 				}
+		 				
+		 				int i = JOptionPane.showConfirmDialog(null, "Drop the table letemps ?", "Drop the table", JOptionPane.YES_NO_OPTION, JOptionPane.NO_OPTION);
+		 				
+		 				if (i==0) stmt.execute("drop table letemps cascade constraints PURGE");
 		 				
 		 				
 		 				//requete = "INSERT INTO COMMANDE VALUES ( 500,"+Timestamp.valueOf(LocalDateTime.now())+",10)";
