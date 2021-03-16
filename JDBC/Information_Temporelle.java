@@ -23,10 +23,7 @@ import javax.swing.JOptionPane;
 public class Information_Temporelle {
 	
 	
-	public static void info_temp() throws FileNotFoundException, IOException {
-		load();
-	}
-		public static void load() throws IOException, FileNotFoundException{
+	public static void info_temp() throws IOException, FileNotFoundException{
 		     try {
 		        	Class.forName("oracle.jdbc.driver.OracleDriver");
 		 			
