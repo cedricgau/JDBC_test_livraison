@@ -43,7 +43,8 @@ public class PingJdbc {
 	 		try( Connection cnx = DriverManager.getConnection(properties.getProperty("url"), properties.getProperty("user"), properties.getProperty("pwd"))) {
 	 			
 	 			cnx.setAutoCommit(false);
-	 			return cnx;
+	 			int rep = JOptionPane.showConfirmDialog(null, "Connection à la base de donnée "+ properties.getProperty("user")+" ?", "Connection à la base ", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+	 			if (rep==0 ) return cnx;
 	 			
 	 		} catch (SQLException e1) {
 	 			System.out.println("Pb pour atteindre la BD  -  " + e1.getMessage());
@@ -56,7 +57,7 @@ public class PingJdbc {
 	     
 		
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		//PingJdbc.getConnectionByProperties();
+		PingJdbc.getConnectionByProperties();
 		// PingJdbc.getConnectionfactory().getConnection(nomPilote, URLBD, authorizationID, password);
 		//PingJdbc.getConnectionfactory().getConnectionSansAutoCommit(nomPilote, URLBD, authorizationID, password);
 		
