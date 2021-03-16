@@ -45,7 +45,7 @@ public class Information_Temporelle {
 		 			
 		 				stmt.execute("CREATE TABLE LETEMPS (id NUMBER PRIMARY KEY, laDate 	DATE, Heure 	DATE , laDateEtHeure	DATE, laDateEtHeure2	TIMESTAMP(3))"); 
 		 				
-		 				PreparedStatement pstmt = cnx.prepareStatement("INSERT INTO LETEMPS (id,laDate,Heure,laDateEtHeure,laDateEtHeure2) VALUES (?,?,?,?,?)");
+		 				PreparedStatement pstmt = cnx.prepareStatement("INSERT INTO LETEMPS VALUES (?,?,?,?,?)");
 		 				pstmt.setInt(1, 1);
 		 				pstmt.setDate(2, Date.valueOf(LocalDate.now()));
 		 				pstmt.setTime(3, Time.valueOf(LocalTime.now()));
@@ -55,7 +55,7 @@ public class Information_Temporelle {
 		 			
 		 				ResultSet rs = stmt.executeQuery("select * from letemps");
 		 				while(rs.next()){
-		 					System.out.println("La date :"+ rs.getString("LADATE")+" L'heure :" + rs.getTime("HEURE")+" DATE ET TEMPS :" +rs.getTimestamp("ladateetheure"));
+		 					System.out.println("La date :"+ rs.getDate("LADATE")+" L'heure :" + rs.getTime("HEURE")+" DATE ET TEMPS :" +rs.getTimestamp("ladateetheure"));
 		 				}
 		 				
 		 				int i = JOptionPane.showConfirmDialog(null, "Drop the table letemps ?", "Drop the table", JOptionPane.YES_NO_OPTION, JOptionPane.NO_OPTION);
@@ -63,10 +63,16 @@ public class Information_Temporelle {
 		 				if (i==0) stmt.execute("drop table letemps cascade constraints PURGE");
 		 				
 		 				
-		 				//requete = "INSERT INTO COMMANDE VALUES ( 500,"+Timestamp.valueOf(LocalDateTime.now())+",10)";
+		 				pstmt=cnx.prepareStatement("INSERT INTO COMMANDE VALUES (?,?,?)");
+		 				pstmt.setInt(1,500);
+		 				pstmt.setTimestamp(2, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+		 				pstmt.setInt(3,10);
+		 				pstmt.executeUpdate();
 		 				
-		 				
-		 				
+		 				rs = stmt.executeQuery("select * from commande where NOCOMMANDE = 500");
+		 				rs.next();
+		 				i = JOptionPane.showConfirmDialog(null, "Résultat : nocommande = "+rs.getInt("NOCOMMANDE")+" datecommande = "+rs.getTimestamp("DATECOMMANDE")+" noclient = "+rs.getInt("NOCLIENT")+ "\n Erase this line  ?", "Drop the INSERT", JOptionPane.YES_NO_OPTION, JOptionPane.NO_OPTION);
+		 				if (i==0) stmt.execute("delete from commande where nocommande = 500");
 		 				
 		 			} catch (SQLException e) {
 		 				System.out.println("Pb JDBC  -  " + e.getMessage());
